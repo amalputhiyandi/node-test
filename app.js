@@ -51,6 +51,19 @@ app.post('/slowUrl', (req, res) => {
     }, 30000);
 });
 
+
+app.get('/healthCheck', (req, res) => {
+    const uptimeSeconds = process.uptime();
+    const uptime = {
+        seconds: uptimeSeconds,
+        minutes: Math.floor(uptimeSeconds / 60),
+        hours: Math.floor(uptimeSeconds / 3600),
+        days: Math.floor(uptimeSeconds / 86400)
+    };
+    res.json({ uptime });
+});
+
+
 app.post('/slowUrl100', (req, res) => {
     
     console.log("slowUrl ----------------------------------");
@@ -100,5 +113,5 @@ function processWebhookConfirmation(body){
 
 // Start the server
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Test Server is running on http://localhost:${PORT}`);
 });
