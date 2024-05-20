@@ -23,8 +23,10 @@ app.post('/fastUrl', (req, res) => {
 
     const authHeader = req.headers.authorization;
     if (authHeader) {
+        console.log("Auth header => "+authHeader)
         return res.sendStatus(200);
     } else {
+        console.log("Auth header not found sending 401");
         return res.sendStatus(401);
     }
 });
@@ -47,7 +49,6 @@ app.post('/slowUrl', (req, res) => {
         if (authHeader) {
 
             console.log("Auth header => "+authHeader)
-
             return res.sendStatus(200);
         } else {
             console.log("Auth header not found sending 401");
