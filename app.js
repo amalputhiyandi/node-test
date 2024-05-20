@@ -12,14 +12,16 @@ app.use(express.text());
 
 app.post('/fastUrl', (req, res) => {
     
-    let amz = req.headers['x-amz-sns-message-type'];
-    if(amz != null &&  amz == 'SubscriptionConfirmation'){
-        processWebhookConfirmation(req.body,req.headers);
-    }
     console.log("fastUrl----------------------------------");
     console.log(req.headers)
     console.log(req.body)
     console.log("fastUrl----------------------------------")
+
+    let amz = req.headers['x-amz-sns-message-type'];
+    if(amz != null &&  amz == 'SubscriptionConfirmation'){
+        processWebhookConfirmation(req.body,req.headers);
+    }
+
 
     const authHeader = req.headers.authorization;
     if (authHeader) {
@@ -95,7 +97,10 @@ app.post('/slowUrl100', (req, res) => {
 
 function processWebhookConfirmation(body,headers){
 
-   let jsonObj = parseJSONString(body);
+   let jsonObj = body ;
+    if(typeof(jsonObj) == 'string'){
+        jsonObj = parseJSONString(body);
+    }
 
     https.get(jsonObj.SubscribeURL, (response) => {
         let data = '';
