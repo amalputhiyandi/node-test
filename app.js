@@ -6,6 +6,7 @@ const PORT = 3000;
 
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
+app.use(express.text());
 
 // Hardcoded user credentials (for demonstration purposes only)
 
@@ -13,7 +14,7 @@ app.post('/fastUrl', (req, res) => {
     
     let amz = req.headers['x-amz-sns-message-type'];
     if(amz != null &&  amz == 'SubscriptionConfirmation'){
-        processWebhookConfirmation(req.body);
+        processWebhookConfirmation(req.body,req.headers);
     }
     console.log("fastUrl----------------------------------");
     console.log(req.headers)
@@ -37,7 +38,7 @@ app.post('/slowUrl', (req, res) => {
 
     let amz = req.headers['x-amz-sns-message-type'];
     if(amz != null &&  amz == 'SubscriptionConfirmation'){
-        processWebhookConfirmation(req.body);
+        processWebhookConfirmation(req.body,req.headers);
     }
 
     
@@ -73,7 +74,7 @@ app.post('/slowUrl100', (req, res) => {
 
     let amz = req.headers['x-amz-sns-message-type'];
     if(amz != null &&  amz == 'SubscriptionConfirmation'){
-        processWebhookConfirmation(req.body);
+        processWebhookConfirmation(req.body,req.headers);
     }
 
 
@@ -87,11 +88,11 @@ app.post('/slowUrl100', (req, res) => {
     }, 100000);
 });
 
-function processWebhookConfirmation(body){
+function processWebhookConfirmation(body,headers){
 
-    console.log(body.SubscribeURL)
+   let jsonObj = parseJSONString(body);
 
-    https.get(body.SubscribeURL, (response) => {
+    https.get(jsonObj.SubscribeURL, (response) => {
         let data = '';
 
         // A chunk of data has been received.
@@ -110,8 +111,18 @@ function processWebhookConfirmation(body){
     });
 }
 
+function parseJSONString(jsonString) {
+    try {
+        return JSON.parse(jsonString);
+    } catch (error) {
+        console.error('Invalid JSON string:', error);
+        return null;
+    }
+}
+
 
 // Start the server
 app.listen(PORT, () => {
     console.log(`Test Server is running on http://localhost:${PORT}`);
+    console.log(new Date());
 });
