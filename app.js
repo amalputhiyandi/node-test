@@ -45,8 +45,12 @@ app.post('/slowUrl', (req, res) => {
     const authHeader = req.headers.authorization;
     setTimeout(() => {
         if (authHeader) {
+
+            console.log("Auth header => "+authHeader)
+
             return res.sendStatus(200);
         } else {
+            console.log("Auth header not found sending 401");
             return res.sendStatus(401);
         }
     }, 30000);
