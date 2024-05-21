@@ -38,7 +38,7 @@ app.post('/fastUrl', (req, res) => {
     }
 });
 
-app.post('/authTest2', (req, res) => {
+app.post('/authTest3', (req, res) => {
     
     console.log("authTest----------------------------------");
     console.log(req.headers)
@@ -66,6 +66,7 @@ app.post('/authTest2', (req, res) => {
     } else {
         console.log("Auth header not found sending 401");
         res.set('Authorization', 'Basic QU1BTDoxMjM0NQ==');
+        res.set('www-authenticate', 'Basic QU1BTDoxMjM0NQ==');
         return res.sendStatus(401);
     }
 });
