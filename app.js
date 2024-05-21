@@ -172,6 +172,6 @@ function parseJSONString(jsonString) {
 
 // Start the server
 app.listen(PORT, () => {
-    console.log(`Test3 Server is running on http://localhost:${PORT}`);
+    console.log(`Test4 Server is running on http://localhost:${PORT}`);
     console.log(new Date());
 });
