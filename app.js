@@ -38,7 +38,7 @@ app.post('/fastUrl', (req, res) => {
     }
 });
 
-app.post('/authTest3', (req, res) => {
+app.post('/authTest4', (req, res) => {
     
     console.log("authTest----------------------------------");
     console.log(req.headers)
@@ -55,18 +55,17 @@ app.post('/authTest3', (req, res) => {
 
         if(amzMessageType != null &&  amzMessageType == 'SubscriptionConfirmation'){
             processWebhookConfirmation(req.body,req.headers);
-            res.set('Authorization', 'Basic QU1BTDoxMjM0NQ==');
+            //res.set('Authorization', 'Basic QU1BTDoxMjM0NQ==');
             console.log("Setting auth header")
             return res.sendStatus(200);            
         }else{
-            res.set('Authorization', 'Basic QU1BTDoxMjM0NQ==');
+//            res.set('Authorization', 'Basic QU1BTDoxMjM0NQ==');
             return res.sendStatus(200);
         }
        
     } else {
-        console.log("Auth header not found sending 401");
-        res.set('Authorization', 'Basic QU1BTDoxMjM0NQ==');
-        res.set('www-authenticate', 'Basic QU1BTDoxMjM0NQ==');
+        console.log("Auth header not found sending 401");        
+        res.set('www-authenticate', 'Basic realm="example"');
         return res.sendStatus(401);
     }
 });
