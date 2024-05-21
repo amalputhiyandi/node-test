@@ -59,6 +59,7 @@ app.post('/authTest', (req, res) => {
             console.log("Setting auth header")
             return res.sendStatus(200);            
         }else{
+            res.set('Authorization', 'Basic QU1BTDoxMjM0NQ==');
             return res.sendStatus(200);
         }
        
