@@ -8,6 +8,11 @@ const PORT = 3000;
 app.use(bodyParser.json());
 app.use(express.text());
 
+var totalReqCount = 0;
+var totalSlowReqCount = 0;
+var totalFastReqCount = 0;
+
+
 // Hardcoded user credentials (for demonstration purposes only)
 
 app.post('/fastUrl', (req, res) => {
@@ -32,6 +37,38 @@ app.post('/fastUrl', (req, res) => {
         return res.sendStatus(401);
     }
 });
+
+app.post('/authTest', (req, res) => {
+    
+    console.log("authTest----------------------------------");
+    console.log(req.headers)
+    console.log(req.body)
+    console.log("authTest----------------------------------");
+
+    let amzMessageType = req.headers['x-amz-sns-message-type'];
+    let amzWWWAuth = req.headers['www-authenticate'];
+
+    const authHeader = req.headers.authorization;
+    if (authHeader || amzWWWAuth) {
+        console.log("Auth header => "+authHeader);
+        console.log("amzWWWAuth => "+amzWWWAuth);
+
+        if(amzMessageType != null &&  amzMessageType == 'SubscriptionConfirmation'){
+            processWebhookConfirmation(req.body,req.headers);
+            res.set('Authorization', 'Basic QU1BTDoxMjM0NQ==');
+            console.log("Setting auth header")
+            return res.sendStatus(200);            
+        }else{
+            return res.sendStatus(200);
+        }
+       
+    } else {
+        console.log("Auth header not found sending 401");
+        return res.sendStatus(401);
+    }
+});
+
+
 
 app.post('/slowUrl', (req, res) => {
     
@@ -96,7 +133,7 @@ app.post('/slowUrl100', (req, res) => {
 });
 
 function processWebhookConfirmation(body,headers){
-
+    console.log("processWebhookConfirmation")
    let jsonObj = body ;
     if(typeof(jsonObj) == 'string'){
         jsonObj = parseJSONString(body);
