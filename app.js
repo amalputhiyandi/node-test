@@ -17,25 +17,18 @@ var totalFastReqCount = 0;
 
 app.post('/fastUrl', (req, res) => {
     
-    console.log("fastUrl----------------------------------");
+    console.log("fastUrl-----q-----------------------------");
     console.log(req.headers)
     console.log(req.body)
-    console.log("fastUrl----------------------------------")
+    console.log("fastUrl------q----------------------------")
 
     let amz = req.headers['x-amz-sns-message-type'];
     if(amz != null &&  amz == 'SubscriptionConfirmation'){
         processWebhookConfirmation(req.body,req.headers);
     }
 
-
-    const authHeader = req.headers.authorization;
-    if (authHeader) {
         console.log("Auth header => "+authHeader)
         return res.sendStatus(200);
-    } else {
-        console.log("Auth header not found sending 401");
-        return res.sendStatus(401);
-    }
 });
 
 app.post('/authTest4', (req, res) => {
@@ -122,8 +115,7 @@ app.post('/slowUrl100', (req, res) => {
     if(amz != null &&  amz == 'SubscriptionConfirmation'){
         processWebhookConfirmation(req.body,req.headers);
     }
-
-
+    
     const authHeader = req.headers.authorization;
     setTimeout(() => {
         if (authHeader) {
