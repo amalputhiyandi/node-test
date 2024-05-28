@@ -26,7 +26,8 @@ app.post('/fastUrl', (req, res) => {
     if(amz != null &&  amz == 'SubscriptionConfirmation'){
         processWebhookConfirmation(req.body,req.headers);
     }
-        return res.sendStatus(200);
+    return res.sendStatus(200);
+    
 });
 
 app.post('/authTest4', (req, res) => {
