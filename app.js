@@ -14,7 +14,7 @@ var totalFastReqCount = 0;
 
 
 // Hardcoded user credentials (for demonstration purposes only)
-
+ var fastUrlMap = {}
 app.post('/fastUrl', (req, res) => {
     
     console.log("fastUrl-----1-----------------------------");
@@ -25,6 +25,20 @@ app.post('/fastUrl', (req, res) => {
     let amz = req.headers['x-amz-sns-message-type'];
     if(amz != null &&  amz == 'SubscriptionConfirmation'){
         processWebhookConfirmation(req.body,req.headers);
+    }else{
+        
+        let jsonObj = req.body ;
+        if(typeof(jsonObj) == 'string'){
+            jsonObj = parseJSONString(jsonObj);
+        }
+
+        let mapKey = jsonObj.event + "_"+ jsonObj.id;        
+        if (fastUrlMap.hasOwnProperty(mapKey)) {
+            fastUrlMap[mapKey] = fastUrlMap[mapKey] + 1
+        } else {
+            fastUrlMap[mapKey] = 1
+        }
+        console.log("Request received for "+ mapKey + ", Count "+ fastUrlMap[mapKey])        
     }
     return res.sendStatus(200);
 });
