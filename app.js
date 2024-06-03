@@ -17,17 +17,16 @@ var totalFastReqCount = 0;
 
 app.post('/fastUrl', (req, res) => {
     
-    console.log("fastUrl-----q-----------------------------");
+    console.log("fastUrl-----1-----------------------------");
     console.log(req.headers)
     console.log(req.body)
-    console.log("fastUrl------q----------------------------")
+    console.log("fastUrl------1----------------------------")
 
     let amz = req.headers['x-amz-sns-message-type'];
     if(amz != null &&  amz == 'SubscriptionConfirmation'){
         processWebhookConfirmation(req.body,req.headers);
     }
     return res.sendStatus(200);
-    
 });
 
 app.post('/authTest4', (req, res) => {
@@ -159,6 +158,36 @@ function parseJSONString(jsonString) {
         return null;
     }
 }
+
+let retryMap = {};
+
+app.post('/retryTest', (req, res) => {
+    
+    console.log("retryTest-----1-----------------------------");
+    console.log(req.headers)
+    console.log(req.body)
+    console.log("retryTest------1----------------------------")
+
+    let jsonObj = req.body ;
+    if(typeof(jsonObj) == 'string'){
+        jsonObj = parseJSONString(jsonObj);
+    }
+
+    let amz = req.headers['x-amz-sns-message-type'];
+    if(amz != null &&  amz == 'SubscriptionConfirmation'){
+        processWebhookConfirmation(req.body,req.headers);
+        return res.sendStatus(200);
+    }else{
+        let mapKey = jsonObj.event + "_"+ jsonObj.id;        
+        if (retryMap.hasOwnProperty(mapKey)) {
+            retryMap[mapKey] = retryMap[mapKey] + 1
+        } else {
+            retryMap[mapKey] = 1
+        }
+        console.log("Request received for "+ mapKey + ", Count "+ retryMap[mapKey])
+        return res.sendStatus(422);        
+    }
+});
 
 
 // Start the server
