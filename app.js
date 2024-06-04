@@ -38,7 +38,7 @@ app.post('/fastUrl', (req, res) => {
         } else {
             fastUrlMap[mapKey] = 1
         }
-        console.log("Request received for "+ mapKey + ", On : "+ new Date().toISOString() +", Count "+ fastUrlMap[mapKey])        
+        console.log("Request received for "+ mapKey + ", On : "+ new Date().toISOString() +", Count "+ fastUrlMap[mapKey])
     }
     return res.sendStatus(200);
 });
@@ -176,10 +176,10 @@ let retryMap = {};
 
 app.post('/retryTest', (req, res) => {
     
-    console.log("retryTest-----1-----------------------------");
+    console.log("retryTest-----2-----------------------------");
     console.log(req.headers)
     console.log(req.body)
-    console.log("retryTest------1----------------------------")
+    console.log("retryTest-----2----------------------------")
 
     let jsonObj = req.body ;
     if(typeof(jsonObj) == 'string'){
@@ -198,7 +198,7 @@ app.post('/retryTest', (req, res) => {
             retryMap[mapKey] = 1
         }
         console.log("Request received for "+ mapKey + ", On : "+ new Date().toISOString() +" Count "+ retryMap[mapKey] )
-        return res.sendStatus(422);        
+        return res.sendStatus(503);        
     }
 });
 
