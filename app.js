@@ -236,7 +236,7 @@ app.post('/retryTest3', (req, res) => {
         }
         previousDate = currentHit;
 
-        console.log("retryTest2 for "+ mapKey + ", On : "+ new Date().toISOString() +" Count "+ retryMap[mapKey] +" , Diff Sec :"+ )
+        console.log("retryTest2 for "+ mapKey + ", On : "+ new Date().toISOString() +" Count "+ retryMap[mapKey] +" , Diff Sec :"+ diffInSec)
         return res.sendStatus(503);        
     }
 });
