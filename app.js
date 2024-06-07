@@ -202,6 +202,34 @@ app.post('/retryTest1', (req, res) => {
     }
 });
 
+app.post('/retryTest2', (req, res) => {
+    
+    console.log("retryTest-----2-----------------------------");
+    console.log(req.headers)
+    console.log(req.body)
+    console.log("retryTest-----2----------------------------")
+
+    let jsonObj = req.body ;
+    if(typeof(jsonObj) == 'string'){
+        jsonObj = parseJSONString(jsonObj);
+    }
+
+    let amz = req.headers['x-amz-sns-message-type'];
+    if(amz != null &&  amz == 'SubscriptionConfirmation'){
+        processWebhookConfirmation(req.body,req.headers);
+        return res.sendStatus(200);
+    }else{
+        let mapKey = jsonObj.event + "_"+ jsonObj.id;        
+        if (retryMap.hasOwnProperty(mapKey)) {
+            retryMap[mapKey] = retryMap[mapKey] + 1
+        } else {
+            retryMap[mapKey] = 1
+        }
+        console.log("retryTest2 for "+ mapKey + ", On : "+ new Date().toISOString() +" Count "+ retryMap[mapKey] )
+        return res.sendStatus(503);        
+    }
+});
+
 
 // Start the server
 app.listen(PORT, () => {
