@@ -202,7 +202,9 @@ app.post('/retryTest1', (req, res) => {
     }
 });
 
-app.post('/retryTest2', (req, res) => {
+var previousDate = null;
+
+app.post('/retryTest3', (req, res) => {
     
     console.log("retryTest-----2-----------------------------");
     console.log(req.headers)
@@ -213,6 +215,7 @@ app.post('/retryTest2', (req, res) => {
     if(typeof(jsonObj) == 'string'){
         jsonObj = parseJSONString(jsonObj);
     }
+    currentHit = new Date();
 
     let amz = req.headers['x-amz-sns-message-type'];
     if(amz != null &&  amz == 'SubscriptionConfirmation'){
@@ -225,10 +228,33 @@ app.post('/retryTest2', (req, res) => {
         } else {
             retryMap[mapKey] = 1
         }
-        console.log("retryTest2 for "+ mapKey + ", On : "+ new Date().toISOString() +" Count "+ retryMap[mapKey] )
+        let diffInSec = 0;
+        if(previousDate != null){
+             diffInSec = getTimeDifferenceInSeconds(previousDate, currentHit);             
+        }else{
+            diffInSec = 0;
+        }
+        previousDate = currentHit;
+
+        console.log("retryTest2 for "+ mapKey + ", On : "+ new Date().toISOString() +" Count "+ retryMap[mapKey] +" , Diff Sec :"+ )
         return res.sendStatus(503);        
     }
 });
+
+
+
+
+// Function to calculate the difference in seconds between two dates
+function getTimeDifferenceInSeconds(date1, date2) {
+    // Convert both dates to milliseconds
+    const time1 = new Date(date1).getTime();
+    const time2 = new Date(date2).getTime();
+    // Calculate the difference in milliseconds
+    const diffInMilliseconds = Math.abs(time2 - time1);
+    // Convert milliseconds to seconds
+    const diffInSeconds = Math.floor(diffInMilliseconds / 1000);
+    return diffInSeconds;
+}
 
 
 // Start the server
